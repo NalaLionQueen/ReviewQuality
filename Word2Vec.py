@@ -43,9 +43,9 @@ with open('review text.csv', 'rb') as csvfile:
         # 3. Convert words to lower case and split them
         words = review_text.lower()
         tokens = nltk.word_tokenize(words)
-        for t in tokens:
+        for st in tokens:
             try:
-                st = ps.stem(t).decode('utf-8')
+                #st = ps.stem(t).decode('utf-8')
                 if st not in stpwds:
                     kwds.append(st)
                     #worddic.add(st)
@@ -56,6 +56,7 @@ with open('review text.csv', 'rb') as csvfile:
         texts.append(kwds)
         tags = nltk.pos_tag(kwds)
         for k, pos in tags:
+        	#print k,pos
         	if (pos == 'NN' or pos == 'NNP' or pos == 'NNS' or pos == 'NNPS'):
         		nouns.add(k.encode('utf-8'))
         reviewkwds.write('\n')
@@ -93,7 +94,10 @@ model.save(model_name)
 
 
 word_vectors = model.wv
-featureidx = dict()
+print model.most_similar("service")
+#print word_vectors['mushroom']
+#print word_vectors['taco']
+'''featureidx = dict()
 nn_vectors = np.array([])
 kcnt = -1
 #print model.wv
@@ -123,7 +127,7 @@ order_centroids = km.cluster_centers_.argsort()[:, ::-1]
 for i in range(ncluster):
     print "Cluster %d:" % i
     wordcluster.write("Cluster "+str(i))
-    for ind in order_centroids[i, :10]:
+    for ind in order_centroids[i, :20]:
         print ' %s' % featureidx[ind]
         wordcluster.write(' '+featureidx[ind])
-    wordcluster.write('\n')
+    wordcluster.write('\n')'''
