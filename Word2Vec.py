@@ -6,6 +6,14 @@ import numpy as np
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
+import sys
+
+arglist=[]
+for i in range(1,len(sys.argv)):
+	 arglist.append(sys.argv[i])
+nf = int(arglist[0])
+wc = int(arglist[1])
+nc = int(arglist[2])
 
 
 te = ts =time.time()
@@ -61,8 +69,8 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s',\
     level=logging.INFO)
 
 # Set values for various parameters
-num_features = 300    # Word vector dimensionality                      
-min_word_count = 40   # Minimum word count                        
+num_features = nf    # Word vector dimensionality                      
+min_word_count = wc   # Minimum word count                        
 num_workers = 4       # Number of threads to run in parallel
 context = 10          # Context window size                                                                                    
 downsampling = 1e-3   # Downsample setting for frequent words
@@ -80,7 +88,7 @@ model.init_sims(replace=True)
 
 # It can be helpful to create a meaningful model name and 
 # save the model for later use. You can load it later using Word2Vec.load()
-model_name = "300features_40minwords_10context"
+model_name = str(nf)+"features_"+str(wc)+"minwords_10context"
 model.save(model_name)
 
 
@@ -101,7 +109,7 @@ for key in word_vectors.vocab:
 print kcnt
 ##clustering words according to word vectors
 from sklearn.cluster import KMeans
-ncluster = 10
+ncluster = nc
 km = KMeans(n_clusters=ncluster, init='k-means++', max_iter=100, n_init=1)
 
 print("Clustering sparse data with %s" % km)
@@ -109,7 +117,7 @@ t0 = time.time()
 km.fit(nn_vectors)
 print("done in %0.3fs" % (time.time() - t0))
 
-wordcluster = open('wordcluster.txt','w')
+wordcluster = open(str(nf)+'features'+str(wc)+'minwordswordcluster'+str(nc)+'.txt','w')
 print "Top terms per cluster:"
 order_centroids = km.cluster_centers_.argsort()[:, ::-1]
 for i in range(ncluster):
